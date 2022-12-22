@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+// import Products from "./components/Products";
 import axios from "axios";
 import "./App.css";
 import Loader from "./components/Loader";
@@ -15,7 +16,6 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [readMore, setReadMore] = useState<boolean>(false);
   useEffect(() => {
     setLoading(true);
     setErrorMessage("");
@@ -37,18 +37,23 @@ function App() {
 
     return () => {
       setProducts([]);
+      // console.log(Products);
     };
   }, []);
+  const [readMore, setReadMore] = useState<boolean>(false);
+  const [activeId, setactiveId] = useState(-1);
 
   // show loader once page component loads
   // Hide loader once axios is no more fetching
   // show "No result" if nothing comes back    if i off my data
   // Show "Error occured" if error occurs   condition
   // Else Show products
-
   return (
     <main>
       <h1>Product Store</h1>
+
+      {/* <Products products={products} /> */}
+
       <div className="products">
         {errorMessage && "Error occurred"}
         {loading ? (
@@ -62,12 +67,19 @@ function App() {
               <p>{title}</p>
               <h1>${price}</h1>
               <p>
-                {readMore ? description : `${description.substring(0, 200)}...`}
-                <button onClick={() => setReadMore(!readMore)}>
-                  {readMore ? `show less` : `read more`}
+                {readMore && activeId == id
+                  ? description
+                  : `${description.substring(0, 200)}...`}
+                <button
+                  onClick={() => {
+                    setactiveId(id);
+                    setReadMore(!readMore);
+                  }}
+                >
+                  {readMore && activeId == id ? `show less` : `read more`}
                 </button>
               </p>
-              <sub>{category}</sub>
+              <sub>{category} </sub>
             </div>
           ))
         )}
